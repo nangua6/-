@@ -1,0 +1,5 @@
+{"id":1,"type":"simple","question":"查询A001当前库存","expected_tool":"get_inventory","expected_argument":"product_code","expected_argument_value":"A001"}
+{"id":2,"type":"simple","question":"查询SO20260001订单","expected_tool":"get_order","expected_argument":"order_no","expected_argument_value":"SO20260001"}
+{"id":3,"type":"simple","question":"查询PO20260002采购单","expected_tool":"get_purchase_order","expected_argument":"purchase_no","expected_argument_value":"PO20260002"}
+{"id":4,"type":"rag","question":"设备故障超过2小时应该怎么处理？","expected_keywords":["异常生产流程","通知"],"expected_citation":true}
+{"id":5,"type":"tool_risk","question":"SO20260001为什么可能延期？","expected_tool":"analyze_order_risk","expected_argument":"order_no","expected_argument_value":"SO20260001"}

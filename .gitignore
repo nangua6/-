@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.env
+.venv
+node_modules
+dist
+build
+*.log
+eval_results/
+.pytest_cache
+.DS_Store
+data/uploads
+mcp_server/.venv
+backend/.env
+data/knowledge/.ipynb_checkpoints
+mcp_server/.venv/
