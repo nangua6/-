@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.deps import get_db, get_current_user_payload, get_redis
+from app.core.deps import get_db, get_current_user_payload
 from app.models.session import ConversationSession
 from app.models.message import Message
 from app.schemas.agent import AgentRequest, AgentResponse
@@ -20,7 +20,7 @@ from app.tools.base import ToolContext
 router = APIRouter(prefix="/api/agent", tags=["agent"])
 
 
-def _provider() -> object:
+def _provider():
     settings = get_settings()
     if settings.ai_provider == "openai" and settings.ai_api_key:
         return OpenAICompatibleProvider(settings.ai_base_url, settings.ai_api_key, settings.ai_model, settings.request_timeout)

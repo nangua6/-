@@ -1,18 +1,23 @@
 from __future__ import annotations
 
+from pathlib import Path
+
 from pydantic import BaseModel
+
+# Project root is backend's parent
+_PROJECT_ROOT = Path(__file__).resolve().parents[2]
+_DEFAULT_DB_PATH = _PROJECT_ROOT / "data" / "app.db"
 
 
 class Settings(BaseModel):
     app_env: str = "development"
     app_secret: str = "change-me"
-    database_url: str = "postgresql+asyncpg://app:app@localhost:5432/app"
+    database_url: str = f"sqlite+aiosqlite:///{_DEFAULT_DB_PATH}"
     database_echo: bool = False
-    redis_url: str = "redis://localhost:6379/0"
     jwt_secret: str = "change-me"
     jwt_algorithm: str = "HS256"
     jwt_expire_minutes: int = 120
-    cors_allow_origins: list[str] = ["http://localhost:5173", "http://localhost:3000"]
+    cors_allow_origins: list[str] = ["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"]
 
     ai_provider: str = "mock"
     ai_base_url: str = "https://api.openai.com/v1"
@@ -40,16 +45,20 @@ def get_settings() -> Settings:
     import os
 
     load_dotenv()
+
+    db_url = os.getenv("DATABASE_URL", "")
+    if not db_url:
+        db_url = f"sqlite+aiosqlite:///{_DEFAULT_DB_PATH}"
+
     return Settings(
         app_env=os.getenv("APP_ENV", "development"),
         app_secret=os.getenv("APP_SECRET", "change-me"),
-        database_url=os.getenv("DATABASE_URL", "postgresql+asyncpg://app:app@localhost:5432/app"),
+        database_url=db_url,
         database_echo=os.getenv("DATABASE_ECHO", "false").lower() == "true",
-        redis_url=os.getenv("REDIS_URL", "redis://localhost:6379/0"),
         jwt_secret=os.getenv("JWT_SECRET", "change-me"),
         jwt_algorithm=os.getenv("JWT_ALGORITHM", "HS256"),
         jwt_expire_minutes=int(os.getenv("JWT_EXPIRE_MINUTES", "120")),
-        cors_allow_origins=os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173,http://localhost:3000").split(","),
+        cors_allow_origins=os.getenv("CORS_ALLOW_ORIGINS", "http://localhost:5173,http://localhost:3000,http://127.0.0.1:5173").split(","),
         ai_provider=os.getenv("AI_PROVIDER", "mock"),
         ai_base_url=os.getenv("AI_BASE_URL", "https://api.openai.com/v1"),
         ai_api_key=os.getenv("AI_API_KEY", ""),
